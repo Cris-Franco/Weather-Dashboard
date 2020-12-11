@@ -12,6 +12,7 @@ var currentWSpeed = $("#wind-speed");
 var currentUvindex = $("#uv-index");
 var sCity=[];
 
+
 // Declare API key
 var APIKey="e6e82133cbe9e3f1d15080618e7765d4";
 
@@ -23,6 +24,7 @@ function displayWeather(event){
         currentWeather(city);
     }
 }
+
 // Function to get weather information using api call
 function currentWeather(city){
     var queryURL= "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial" + "&APPID=" + APIKey;
@@ -49,7 +51,7 @@ function currentWeather(city){
         // Wind speed
         var windsmph= response.wind.speed;
         $(currentWSpeed).html(windsmph + "MPH");
-
+        
         // Display UVIndex
         UVIndex(response.coord.lon,response.coord.lat);
         forecast(response.id);
@@ -71,6 +73,41 @@ function currentWeather(city){
             }
         }
 
+    });
+}
+    // Function to get UV index
+    function UVIndex(ln,lt){
+    var uvUrl="https://api.openweathermap.org/data/2.5/uvi?appid="+ APIKey + "&lat=" + lt + "&lon=" + ln;
+    $.ajax({
+            url:uvUrl,
+            method:"GET"
+            }).then(function(response){
+                $(currentUvindex).html(response.value);
+            });
+}
+    
+// Function to display the future weather forecast
+function forecast(cityid){
+    var forcastURL="https://api.openweathermap.org/data/2.5/forecast?id=" + cityid + "&appid=" + APIKey;
+    $.ajax({
+        url:forcastURL,
+        method:"GET"
+    }).then(function(response){
+        
+        for (i = 0; i<5; i++){
+            var date = new Date((response.list[((i+1)*8)-1].dt)*1000).toLocaleDateString();
+            var iconCode = response.list[((i+1)*8)-1].weather[0].icon;
+            var iconurl = "https://openweathermap.org/img/wn/" + iconCode + ".png";
+            var tempK = response.list[((i+1)*8)-1].main.temp;
+            var tempF =(((tempK-273.5)*1.80)+32).toFixed(2);
+            var humidity= response.list[((i+1)*8)-1].main.humidity;
+        
+            $("#fDate" + i).html(date);
+            $("#fImg" + i).html("<img src=" + iconurl + ">");
+            $("#fTemp" + i).html(tempF + "&#8457");
+            $("#fHumidity" + i).html(humidity + "%");
+        }
+        
     });
 }
 
@@ -106,3 +143,15 @@ function loadlastCity(){
     }
 
 }
+// Function to clear history
+function clearHistory(event){
+    event.preventDefault();
+    sCity=[];
+    localStorage.removeItem("cityname");
+    document.location.reload();
+
+}
+// Event Listeners
+$("#search-button").on("click",displayWeather);
+$(window).on("load",loadlastCity);
+$("#clear-history").on("click",clearHistory);
