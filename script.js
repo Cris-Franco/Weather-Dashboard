@@ -23,3 +23,10 @@ function displayWeather(event){
         currentWeather(city);
     }
 }
+// Function to get weather information using api call
+function currentWeather(city){
+    var queryURL= "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial" + "&APPID=" + APIKey;
+    $.ajax({
+        url:queryURL,
+        method:"GET",
+    }).then(function(response)
