@@ -29,4 +29,8 @@ function currentWeather(city){
     $.ajax({
         url:queryURL,
         method:"GET",
-    }).then(function(response)
+    }).then(function(response){
+       
+        // Get the weather icons
+        var weathericon = response.weather[0].icon;
+        var iconurl = "https://openweathermap.org/img/wn/"+ weathericon +"@2x.png";
