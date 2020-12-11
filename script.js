@@ -49,3 +49,27 @@ function currentWeather(city){
         // Wind speed
         var windsmph= response.wind.speed;
         $(currentWSpeed).html(windsmph + "MPH");
+
+        // Display UVIndex
+        UVIndex(response.coord.lon,response.coord.lat);
+        forecast(response.id);
+        if(response.cod==200){
+            sCity=JSON.parse(localStorage.getItem("cityname"));
+            if (sCity==null){
+                sCity=[];
+                sCity.push(city.toUpperCase()
+                );
+                localStorage.setItem("cityname",JSON.stringify(sCity));
+                addToList(city);
+            }
+            else {
+                if(find(city)>0){
+                    sCity.push(city.toUpperCase());
+                    localStorage.setItem("cityname",JSON.stringify(sCity));
+                    addToList(city);
+                }
+            }
+        }
+
+    });
+    
