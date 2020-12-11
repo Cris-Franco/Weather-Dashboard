@@ -34,3 +34,18 @@ function currentWeather(city){
         // Get the weather icons
         var weathericon = response.weather[0].icon;
         var iconurl = "https://openweathermap.org/img/wn/"+ weathericon +"@2x.png";
+
+        // Format City & Date
+        var date = new Date(response.dt*1000).toLocaleDateString();
+        $(currentCity).html(response.name +"("+date+")" + "<img src=" + iconurl + ">");
+        
+        // Display temperature
+        var tempF = response.main.temp
+        $(currentTemperature).html(tempF + "&#8457");
+        
+        // Humidity
+        $(currentHumidty).html(response.main.humidity + "%");
+        
+        // Wind speed
+        var windsmph= response.wind.speed;
+        $(currentWSpeed).html(windsmph + "MPH");
