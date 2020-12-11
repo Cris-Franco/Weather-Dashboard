@@ -72,4 +72,12 @@ function currentWeather(city){
         }
 
     });
-    
+}
+
+// Add searched city history
+function addToList(c){
+    var listEl= $("<li>" + c.toUpperCase() + "</li>");
+    $(listEl).attr("class","list-group-item");
+    $(listEl).attr("data-value",c.toUpperCase());
+    $(".list-group").append(listEl);
+}
